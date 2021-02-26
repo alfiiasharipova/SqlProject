@@ -1,17 +1,5 @@
 version: '3.7'
 services:
-  java-app:
-    build: .
-    image: java-app:0.1
-    ports:
-      - '9999:9999'
-    environment:
-      - DB_URL=jdbc:mysql://mysql:3306/app
-      - DB_USER=app
-      - DB_PASS=9mREsvXDs9Gk89Ef
-    depends_on:
-      mysql:
-        condition: service_healthy
   mysql:
     image: mysql:8.0.19
     ports:
@@ -23,6 +11,4 @@ services:
       - MYSQL_DATABASE=app
       - MYSQL_USER=app
       - MYSQL_PASSWORD=9mREsvXDs9Gk89Ef
-    healthcheck:
-      test: exit 0
 

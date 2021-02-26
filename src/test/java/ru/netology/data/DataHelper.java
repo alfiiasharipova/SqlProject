@@ -21,7 +21,7 @@ public class DataHelper {
     return new AuthInfo("vasya", "qwerty123");
   }
 
-  // public static AuthInfo getOtherAuthInfo(AuthInfo original) {return new AuthInfo("petya", "123qwerty");}
+  public static AuthInfo getWrongAuthInfo() {return new AuthInfo("vasya", "123qwerty");}
 
   @Value
   public static class VerificationCode {
@@ -29,7 +29,7 @@ public class DataHelper {
   }
 
   public static VerificationCode getVerificationCodeFor() {
-    val codeSQL ="SELECT code FROM auth_codes WHERE user_id = '0a604536-0191-45b2-9250-e2712fa4a04c';";
+    val codeSQL ="SELECT code FROM auth_codes INNER JOIN users ON auth_codes.user_id = users.id;";
     val runner =new QueryRunner();
     String code = "";
 
@@ -41,6 +41,28 @@ public class DataHelper {
       throwables.printStackTrace();
     }
     return new VerificationCode(code);}
+
+    public static void clearCodeAuth()  throws SQLException{
+      val codeSQL ="DELETE FROM auth_codes;";
+      val runner =new QueryRunner();
+      try (
+              val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "9mREsvXDs9Gk89Ef");
+      ) {
+        runner.update(conn, codeSQL);
+      }
+    }
+
+  public static void clearDB()  throws SQLException{
+    val codeSQL ="DELETE FROM users;";
+    val codeSQL2 ="DELETE FROM cards;";
+    val runner =new QueryRunner();
+    try (
+            val conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "9mREsvXDs9Gk89Ef");
+    ) {
+      runner.update(conn, codeSQL2);
+      runner.update(conn, codeSQL);
+    }
+  }
 
   public static VerificationCode getVerificationWrongCode() {
     return new VerificationCode("12345");
